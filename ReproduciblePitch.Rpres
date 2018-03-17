@@ -1,0 +1,57 @@
+ReproduciblePitch - Ass4 ShinyApp 
+========================================================
+author: feideshu
+date: March 16, 2018
+autosize: true
+
+See the app here: https://mjfilipski.shinyapps.io/Ass4_ShinyApp/ 
+
+
+Goals of the app
+========================================================
+
+- Displays a plot of the number of telephones by year and region of the world
+- Allows the user to select which regions to display on the plot
+- Adds trendlines (for selected regions) 
+- Displays the yearly rate of growth (for selected regions)
+
+Data used in the app 
+========================================================
+```{r}
+data("WorldPhones")
+WorldPhones[,1:4]
+```
+Full dataset has 7 regions.  It is native to RStudio.  
+Manipulations in Server.R include an "lm" command and a "predict"
+
+```{r, echo=FALSE}
+# Note: on server the syntax is different to allow for reactivity
+d <- as.data.frame(WorldPhones)
+d$year = as.numeric(row.names(WorldPhones))
+
+# Regression lines are used to figure out rate of growth in phone
+# Here example with three regions (up to 6 can be selected)
+fit <- lm(cbind(d$N.Amer, d$Europe, d$Africa) ~ d$year)
+
+# Predition necessary to draw the trendlines on plot
+p<- predict(fit, newdata = as.data.frame(d$year))
+
+```
+
+The basic plot
+========================================================
+```{r}
+# Here, only 3 regions selected
+matplot( d$year, WorldPhones[,c("N.Amer", "Europe", "Africa")])
+matlines(d$year,p)
+```
+
+
+Rate of growth of telephones
+========================================================
+The app also displays a table such as the following:
+```{r}
+t <- data.frame(Region=c("N.Amer", "Europe", "Africa"), Slope=fit$coefficients[2,])
+print(t, row.names=FALSE)
+```
+With the option of selecting up to 6 regions
