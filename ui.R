@@ -27,10 +27,13 @@ shinyUI(fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-       plotOutput("phonePlot"),
-       hr(),
-       h4("Average Rates of Growth [in 1000s of phones / year]:"),
-       tableOutput("slopes")
+        h4("Number of Phones in the World over time"), 
+        h6("Only user-selected continents are displayed.  Data comes from R dataset WorldPhones. 
+                   Trendlines computed using lm command"),
+        plotOutput("phonePlot"),
+        hr(),
+        h4("Average Rates of Growth [in 1000s of phones / year]:"),
+        tableOutput("slopes")
     )
     
   )
